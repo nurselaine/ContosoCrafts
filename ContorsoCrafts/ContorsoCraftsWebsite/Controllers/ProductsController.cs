@@ -1,3 +1,4 @@
+using ContosoCrafts.WebSite.Models;
 using ContosoCrafts.WebSite.Services;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Mvc;
@@ -15,6 +16,12 @@ namespace ContorsoCraftsWebsite.Controllers
       this.ProductService = productService;
     }
 
-    public JsonFileProductService ProductService;
+    public JsonFileProductService ProductService { get; }
+
+    [HttpGet]
+    public IEnumerable<Product> Get()
+    {
+      return ProductService.GetProducts();
+    }
   }
 }

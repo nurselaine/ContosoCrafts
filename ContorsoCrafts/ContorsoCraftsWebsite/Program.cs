@@ -8,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddTransient<JsonFileProductService>();
+builder.Services.AddControllers();
 
 var app = builder.Build();
 
@@ -31,6 +32,7 @@ app.MapRazorPages();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapRazorPages();
+    endpoints.MapControllers();
     // endpoints.MapGet("/products", async (context) =>
     // {
     //     var productServices = app.Services.GetRequiredService<JsonFileProductService>();
