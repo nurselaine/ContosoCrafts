@@ -23,7 +23,7 @@ namespace ContosoCrafts.WebSite.Services
 
         public IEnumerable<Product> GetProducts()
         {
-            using(var jsonFileReader = File.OpenText(JsonFileName))
+            using (var jsonFileReader = File.OpenText(JsonFileName))
             {
                 return JsonSerializer.Deserialize<Product[]>(jsonFileReader.ReadToEnd(),
                     new JsonSerializerOptions
@@ -31,6 +31,42 @@ namespace ContosoCrafts.WebSite.Services
                         PropertyNameCaseInsensitive = true
                     });
             }
+        }
+
+        public void AddRating(string productId, int rating)
+        {
+            var products = GetProducts();
+            var query = products.FirstOrDefault(x => x.Id == productId);
+            if (query != null)
+            {
+                if (query.Ratings == null)
+                {
+                    query.Ratings = new int[] { rating };
+                }
+                else
+                {
+                    var ratings = query.Ratings.ToList();
+                    ratings.Add(rating);
+                    query.Ratings = ratings.ToArray();
+                }
+
+                using (var outputStream = File.OpenWrite(JsonFileName))
+                {
+                    JsonSerializer.Serialize<IEnumerable<Product>>(
+                        new Utf8JsonWriter(outputStream, new JsonWriterOptions
+                        {
+                            SkipValidation = true,
+                            Indented = true
+                        }),
+                        products
+                    );
+                }
+            }
+            else
+            {
+                Console.WriteLine("Product not found.");
+            }
+
         }
     }
 }
